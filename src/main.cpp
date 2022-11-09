@@ -9,5 +9,11 @@ void loop() {
   int i;
   // Pham Cong Trang
   // sua tren web
+<<<<<<< HEAD
   // Hoang is here
+=======
+  //test sang ngay 9/11 Trang
+  // sua web lan 2
+  // Hoang sua web
+>>>>>>> 85d38f8622f441fe8da6c86763b0c5c7f7cd5a60
 }
