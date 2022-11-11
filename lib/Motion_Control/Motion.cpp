@@ -8,15 +8,17 @@
 void Motion::Motion(int speed, int theta)
 {
     // DC MOTOR
+    /* 
     double motorSpeedFactor = 1;
 
     LMotorController motorController(ENA, IN1, IN2, motorSpeedFactor);
-
+    */
     motorController.move(speed);
     //SERVO MOTOR  
+    /* 
     Servo myservo;
 
     myservo.attach(9); // CHAN RA
-
-    myservo.write(pos);
+    */
+    myservo.write(theta);
 }
