@@ -10,19 +10,23 @@ public:
     int ymax;
     int xmin;
     int ymin;
-
-private:
-    int _vel;
-    int _theta;
     joystickControl(int _x, int _y, int _xmax, int _ymax, int _xmin, int _ymin)
     {
         x = _x;
         y = _y;
-        xmin = _x;
+        xmin = _xmin;
         xmax = _xmax;
         ymin = _ymin;
         ymax = _ymax;
-        ymin = ymin;
+        ymin = _ymin;
     }
+    void calc(int _vel, int _theta)
+    {
+        
+    }
+
+private:
+    int _vel;
+    int _theta;
 }
 #endif
