@@ -13,6 +13,10 @@ void Motion::Motion(int speed, int theta)
     LMotorController motorController(ENA, IN1, IN2, motorSpeedFactor);
 
     motorController.move(speed);
-    //SERVO MOTOR
-     
+    //SERVO MOTOR  
+    Servo myservo;
+
+    myservo.attach(9); // CHAN RA
+
+    myservo.write(pos);
 }
