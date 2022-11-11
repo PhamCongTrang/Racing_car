@@ -1,5 +1,6 @@
-#ifndef MY_LIBRARY_H
-#define MY_LIBRARY_H
+#ifndef joystick
+#define joystick
 #include <Arduino.h>
-int addTwoInts(int a, int b);
+int joystickControl(int a, int b, int mode);
 #endif
+    
