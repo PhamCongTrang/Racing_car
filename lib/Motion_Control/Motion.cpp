@@ -3,6 +3,7 @@
 // DONG CO SERVO DIEU HUONG PHIA TRUOC DIEU KHIEN TRUC TIEP QUA ARDUINO UNO
 #include "Motion.h"
 #include "LMotorController.h"
+#include "Servo.h"
 
 void Motion::Motion(int speed, int theta)
 {
