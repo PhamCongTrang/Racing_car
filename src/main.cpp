@@ -1,7 +1,16 @@
 #include <Arduino.h>
-#include "Motion_Control.h"
+
 #include "joystick.h"
-#include "RF24.h"
+
+#include "LMotorController.h"
+#include "Servo.h"
+#include "Motion.h"
+
+#define SER 6
+#define ENA 5
+#define IN1 4
+#define IN2 3
+ 
 void setup()
 {
   // put your setup code here, to run once:
@@ -12,11 +21,13 @@ void setup()
   // Servo
   Servo myservo;
   myservo.attach(9); // CHAN RA
-  joystick testObj(700, 800, 1022, 1022, 0, 0);
 }
 void loop()
 
 {
+  joystick testObj(700, 800, 1022, 1022, 0, 0);
   Serial.println(testObj.vel);
   Serial.println(testObj.phi);
+
+  Motion(testObj.vel, testObj.phi);
 }
