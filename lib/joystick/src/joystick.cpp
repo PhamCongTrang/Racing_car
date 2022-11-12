@@ -14,7 +14,7 @@ void calc()
 {
     this->xNew = (this->x - (this->xmax - this->xmin)/2)/(this->xmax-this-> xmin)/2;
     this->yNew = (this->y - (this->ymax - this->ymin/2))/(this->ymax-this->ymin)/2;
-    this-> vel = 255*sqrt(pow(this->xNew,2)+pow(this->yNew,2));
-    this-> phi = atan(this->yNew/this->x);
+    this->vel = 255*sqrt(pow(this->xNew,2)+pow(this->yNew,2));
+    this->phi = atan(this->yNew/this->x);
      
 }

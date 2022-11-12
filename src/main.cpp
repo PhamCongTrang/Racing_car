@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "Motion_Control.h"
+#include "joystick.h"
 void setup() {
   // put your setup code here, to run once:
   // LMotorController
@@ -9,6 +10,7 @@ void setup() {
   //Servo
   Servo myservo;
   myservo.attach(9); // CHAN RA
+  testObj 
 }
 
 void loop() 
