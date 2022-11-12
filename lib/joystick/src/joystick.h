@@ -11,7 +11,7 @@ public:
     int xmin;
     int ymin;
     joystick(int _x, int _y, int _xmax, int _ymax, int _xmin, int _ymin);
-    int calc();
+    void calc();
     int vel;
     int phi;
 
