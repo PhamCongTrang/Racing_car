@@ -7,7 +7,7 @@
 #include "Servo.h"
 #include "Motion.h"
 
-/*
+//
 #define SER 6
 #define ENA 5
 #define IN1 4
