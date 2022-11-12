@@ -9,6 +9,6 @@ joystick::joystick(float _x, float _y, float _xmax, float _ymax, float _xmin, fl
     this->ymax = _ymax;
     this->xmin = _xmin;
     this->ymin = _ymin;
-    this->vel = (int) 255/(_xmax+_xmin)/2*x;
-    this->phi =  PI/(_ymax+_ymin)/2*x;
+    this->vel =  255*2/(_xmax+_xmin)*x;
+    this->phi =  PI*2/(_ymax+_ymin)*y;
 }
