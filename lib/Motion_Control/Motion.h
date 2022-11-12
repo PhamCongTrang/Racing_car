@@ -11,7 +11,7 @@
 #define IN1 6
 #define IN2 7
 
-class LMotorController
+class Motion
 {
 protected:
     int _ena, _in1, _in2;
