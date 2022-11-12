@@ -1,7 +1,7 @@
 #ifndef joystick
 #define joystick
 #include <Arduino.h>
-class joystickControl
+class joystick
 {
 public:
     int x;
@@ -10,23 +10,13 @@ public:
     int ymax;
     int xmin;
     int ymin;
-    joystickControl(int _x, int _y, int _xmax, int _ymax, int _xmin, int _ymin)
-    {
-        x = _x;
-        y = _y;
-        xmin = _xmin;
-        xmax = _xmax;
-        ymin = _ymin;
-        ymax = _ymax;
-        ymin = _ymin;
-    }
-    void calc(int _vel, int _theta)
-    {
-        
-    }
+    joystick(int _x, int _y, int _xmax, int _ymax, int _xmin, int _ymin);
+    int calc();
+    int vel;
+    int phi;
 
 private:
-    int _vel;
-    int _theta;
+    int xNew;
+    int yNew;
 }
 #endif
