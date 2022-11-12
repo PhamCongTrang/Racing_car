@@ -17,6 +17,6 @@ void Motion(int speed, int theta)
     motorController.move(speed);
     //SERVO MOTOR  
     Servo myservo;
-    myservo.attach(9);
+    myservo.attach(6);
     myservo.write(theta);
 }
