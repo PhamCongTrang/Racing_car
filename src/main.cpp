@@ -3,9 +3,9 @@
 #include "joystick.h"
 void setup() {
   // put your setup code here, to run once:
+  
   // LMotorController
-  double motorSpeedFactor = 1;
-  LMotorController motorController(ENA, IN1, IN2, motorSpeedFactor);
+  LMotorController motorController(ENA, IN1, IN2);
 
   //Servo
   Servo myservo;

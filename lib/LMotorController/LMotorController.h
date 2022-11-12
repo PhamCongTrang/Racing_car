@@ -10,9 +10,8 @@ class LMotorController
 protected:
     int _ena, _in1, _in2;
     int _currentSpeed;
-    double _motorAConst;
 public:
-    LMotorController(int ena, int in1, int in2, double motorAConst);
+    LMotorController(int ena, int in1, int in2);
     void move(int speed);
     void stopMoving();
 };
