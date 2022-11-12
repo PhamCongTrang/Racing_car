@@ -7,21 +7,10 @@
 #include "LMotorController.h"
 #include "Servo.h"
 
-#define ENA 10
-#define IN1 6
-#define IN2 7
+#define ENA 5
+#define IN1 4
+#define IN2 3
 
-class Motion
-{
-protected:
-    int _ena, _in1, _in2;
-    int _currentSpeed;
-    double _motorAConst;
-public:
-    LMotorController(int ena, int in1, int in2, double motorAConst);
-    void move(int speed);
-    void stopMoving();
-};
-
+void Motion::Motion(int speed, int theta)
 
 #endif

@@ -9,7 +9,7 @@ void setup() {
 
   //Servo
   Servo myservo;
-  myservo.attach(9); // CHAN RA
+  myservo.attach(6); // CHAN RA
   testObj 
 }
 
