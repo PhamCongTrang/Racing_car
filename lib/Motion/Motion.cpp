@@ -3,13 +3,20 @@
 // DONG CO SERVO DIEU HUONG PHIA TRUOC DIEU KHIEN TRUC TIEP QUA ARDUINO UNO
 #include "Motion.h"
 #include "Arduino.h"
+#include "LMotorController.h"
+#include "Servo.h"
 
-void Motion::Motion(int speed, int theta)
+#define ENA 5
+#define IN1 4
+#define IN2 3
+
+void Motion(int speed, int theta)
 {
     // DC MOTOR
-    
+    LMotorController motorController(ENA, IN1, IN2);
     motorController.move(speed);
     //SERVO MOTOR  
-    
+    Servo myservo;
+    myservo.attach(9);
     myservo.write(theta);
 }
