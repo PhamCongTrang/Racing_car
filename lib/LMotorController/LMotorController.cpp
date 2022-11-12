@@ -2,10 +2,8 @@
 #include "Arduino.h"
 
 
-LMotorController::LMotorController(int ena, int in1, int in2, double motorAConst)
+LMotorController::LMotorController(int ena, int in1, int in2)
 {
-    _motorAConst = motorAConst;
-    
 	_ena = ena;
 	_in1 = in1;
 	_in2 = in2;
@@ -26,7 +24,7 @@ void LMotorController::move(int speed)
     
     digitalWrite(_in1, speed > 0 ? HIGH : LOW);
     digitalWrite(_in2, speed > 0 ? LOW : HIGH);
-    analogWrite(_ena, abs(speed) * _motorAConst);
+    analogWrite(_ena, abs(speed));
     
     _currentSpeed = speed;
 }
