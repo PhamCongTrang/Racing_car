@@ -2,6 +2,7 @@
 // DONG CO DC GAN VOI BANH SAU THONG QUA L298N
 // DONG CO SERVO DIEU HUONG PHIA TRUOC DIEU KHIEN TRUC TIEP QUA ARDUINO UNO
 #include "Motion.h"
+#include "Arduino.h"
 
 void Motion::Motion(int speed, int theta)
 {

@@ -4,7 +4,7 @@
 
 #include "LMotorController.h"
 #include "Servo.h"
-#include "Motion_Control.h"
+#include "Motion.h"
 
 #define SER 6
 #define ENA 5
@@ -22,11 +22,12 @@ void setup()
   Servo myservo;
   myservo.attach(SER); // CHAN RA
 
-  testObj joystick(700, 800, 1022, 1022, 0, 0);
+  
 }
 void loop()
 
 {
+  testObj joystick(700, 800, 1022, 1022, 0, 0);
   Serial.println(testObj.vel);
   Serial.println(testObj.phi);
 
