@@ -11,13 +11,8 @@ void setup()
 
   // Servo
   Servo myservo;
-<<<<<<< HEAD
   myservo.attach(9); // CHAN RA
-  testObj joystick(700, 800, 1022, 1022, 0, 0);
-=======
-  myservo.attach(6); // CHAN RA
-  testObj 
->>>>>>> 1b9edebc8f7abfc252c6b25b1aca107780c1900d
+  joystick testObj(700, 800, 1022, 1022, 0, 0);
 }
 void loop()
 
