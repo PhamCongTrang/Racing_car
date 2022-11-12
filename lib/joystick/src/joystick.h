@@ -1,22 +1,17 @@
-#ifndef joystick
-#define joystick
-#include <Arduino.h>
+#ifndef joystick_h
+#define joystick_h
+#include "Arduino.h"
 class joystick
 {
 public:
-    int x;
-    int y;
-    int xmax;
-    int ymax;
-    int xmin;
-    int ymin;
-    joystick(int _x, int _y, int _xmax, int _ymax, int _xmin, int _ymin);
-    void calc();
-    int vel;
-    int phi;
-
-private:
-    int xNew;
-    int yNew;
-}
+    float x;
+    float y;
+    float xmax;
+    float ymax;
+    float xmin;
+    float ymin;
+    joystick(float _x, float _y, float _xmax, float _ymax, float _xmin, float _ymin);
+    float vel;
+    float phi;
+};
 #endif
