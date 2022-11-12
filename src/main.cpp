@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "SPI.h"
+#include "RF24.h"
 
 #include "joystick.h"
 
