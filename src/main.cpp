@@ -7,6 +7,7 @@
 #include "Servo.h"
 #include "Motion.h"
 
+/*
 #define SER 6
 #define ENA 5
 #define IN1 4
@@ -20,7 +21,6 @@ int msg[3];
 void setup()
 {
   // put your setup code here, to run once:
-
   // LMotorController
   LMotorController motorController(ENA, IN1, IN2);
 

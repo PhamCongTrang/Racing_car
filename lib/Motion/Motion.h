@@ -3,6 +3,6 @@
 #define Motion_h
 #include "Arduino.h"
 
-void Motion::Motion(int speed, int theta)
+void Motion(int speed, int theta);
 
 #endif
