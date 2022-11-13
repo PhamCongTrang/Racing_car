@@ -42,6 +42,7 @@ void setup()
 void loop()
 
 {
+  /*
     if (radio.available()) {
     while (radio.available()) {
       radio.read(&msg, sizeof(msg));
@@ -50,4 +51,8 @@ void loop()
       myservo.write(obj.phi);
     }
   } 
+  */
+  motorController.move(100);
+  myservo.write(80);
+  delay(200);
 }
