@@ -6,6 +6,7 @@
 #include "LMotorController.h"
 #include "Servo.h"
 
+#define SER 6
 #define ENA 5
 #define IN1 4
 #define IN2 3

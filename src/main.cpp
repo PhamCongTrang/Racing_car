@@ -6,13 +6,16 @@
 
 #include "LMotorController.h"
 #include "Servo.h"
-#include "Motion.h"
 
 //
 #define SER 6
 #define ENA 5
 #define IN1 4
 #define IN2 3
+
+// setup MOTOR
+LMotorController motorController(ENA, IN1, IN2);
+Servo myservo;
 
 // setup for RF 2Ghz
 const uint64_t pipe = 0x80E8ABC123LL; // địa chỉ phát
@@ -22,12 +25,6 @@ int msg[3];
 void setup()
 {
   // put your setup code here, to run once:
-  // LMotorController
-  LMotorController motorController(ENA, IN1, IN2);
-
-  // Servo
-  Servo myservo;
-  myservo.attach(9); // CHAN RA
 
   // VoidSetup of rf 2.4ghz
   Serial.begin(9600);
@@ -45,9 +42,8 @@ void loop()
     while (radio.available()) {
       radio.read(&msg, sizeof(msg));
       joystick obj(msg[0], msg[1], 1022, 1022, 0, 0);
-      Motion(testObj.vel, testObj.phi);
+      motorController.move(obj.vel);
+      myservo.write(obj.phi);
     }
-  }
-
-  
+  } 
 }
