@@ -1,7 +1,7 @@
 #include "joystick.h"
 #include "Arduino.h"
 
-joystick::joystick(float _x, float _y, float _xmax, float _ymax, float _xmin, float _ymin)
+joystick::joystick(int _x, int _y, int _xmax, int _ymax, int _xmin, int _ymin)
 {
     this->x = _x-(_xmax+_xmin)/2;
     this->y = _y-(_ymax+_ymin)/2;
@@ -9,6 +9,6 @@ joystick::joystick(float _x, float _y, float _xmax, float _ymax, float _xmin, fl
     this->ymax = _ymax;
     this->xmin = _xmin;
     this->ymin = _ymin;
-    this->vel =  floor(255*2/(_xmax+_xmin)*x);
+    this->vel =  255*2/(_xmax+_xmin)*x;
     this->phi =  90 + 120/(_ymax-_ymin)*y;
 }
