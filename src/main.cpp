@@ -46,10 +46,9 @@ void loop()
     while (radio.available()) {
       radio.read(&msg, sizeof(msg));
       joystick obj(msg[0], msg[1], 1022, 1022, 0, 0);
-      Serial.println(obj.vel);
-      Serial.println(obj.phi);
       motorController.move(obj.vel);
       myservo.write(obj.phi);
+      Serial.println(obj.phi);
     }
   }   
 }
