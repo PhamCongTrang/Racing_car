@@ -88,18 +88,20 @@ void loop()
   }*/
   uint16_t position = qtr.readLineBlack(sensorValues);
   errpre = errnow;
-  errnow = 2500 - position; // Thay errnow = Hàm của Hoàng : vị trí tương đối của line so với điểm chính giữa
+  errnow = position - 2500; // Thay errnow = Hàm của Hoàng : vị trí tương đối của line so với điểm chính giữa
   dt = millis() - tpre;
   tpre = millis();
   P = Kp * errnow;
   I += Ki * errnow * dt;
   D = Kd * (errnow - errpre) / dt;
   motorController.move(255 * (1 - Kv * abs(D)));
-  myservo.write(P + I + D);
+  myservo.write((P + I + D) + 90);
     for (uint8_t i = 0; i < SensorCount; i++)
   {
     Serial.print(sensorValues[i]);
     Serial.print('\t');
   }
-  Serial.println(position);
+  Serial.print(position); Serial.print('\t');
+  Serial.print(errnow); Serial.print('\t');
+  Serial.println(P+90);
 }
