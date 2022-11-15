@@ -39,16 +39,36 @@ void setup()
   myservo.attach(SER);
 }
 // ----------void LOOP-------------------------------------
+//------khai bao bien cho PID do line------
+int dt, tpre;
+int Kp, Ki, Kd, Kv; // Kv la he so giam toc khi vao goc cua
+int err;
+int P, I = 0, D;
+//-----------------------------------------
 void loop()
 
 {
     if (radio.available()) {
-    while (radio.available()) {
+    while (radio.available()) 
+    {
       radio.read(&msg, sizeof(msg));
-      joystick obj(msg[0], msg[1], 1022, 1022, 0, 0);
-      motorController.move(obj.vel);
-      myservo.write(obj.phi);
-      Serial.println(obj.phi);
+      if(msg[2]==1)
+      {
+        joystick obj(msg[0], msg[1], 1022, 1022, 0, 0);
+        motorController.move(obj.vel);
+        myservo.write(obj.phi);
+      }
+      else
+      {
+        //err = Sai lech so voi diem chinh giua// Cho ham cua Hoang
+        dt = millis() - tpre;
+        tpre = millis();
+        P = Kp*err;
+        I += Ki*err*dt;
+        D = Kd*err/dt;
+        motorController.move(255*Kv*D);
+        myservo.write(P + I + D);
+      }
     }
   }   
 }
