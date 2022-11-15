@@ -42,7 +42,7 @@ void setup()
 //------khai bao bien cho PID do line------
 int dt, tpre;
 int Kp, Ki, Kd, Kv; // Kv la he so giam toc khi vao goc cua
-int err;
+int errnow, errpre;
 int P, I = 0, D;
 //-----------------------------------------
 void loop()
@@ -52,7 +52,7 @@ void loop()
     while (radio.available()) 
     {
       radio.read(&msg, sizeof(msg));
-      if(msg[2]==1)
+      if(msg[2] == 1)
       {
         joystick obj(msg[0], msg[1], 1022, 1022, 0, 0);
         motorController.move(obj.vel);
@@ -60,12 +60,13 @@ void loop()
       }
       else
       {
-        //err = Sai lech so voi diem chinh giua// Cho ham cua Hoang
+        errpre = errnow;
+        errnow = 0; //Thay errnow = Hàm của Hoàng : vị trí tương đối của line so với điểm chính giữa
         dt = millis() - tpre;
         tpre = millis();
-        P = Kp*err;
-        I += Ki*err*dt;
-        D = Kd*err/dt;
+        P = Kp*errnow;
+        I += Ki*errnow*dt;
+        D = Kd*(errnow-errpre)/dt;
         motorController.move(255*Kv*D);
         myservo.write(P + I + D);
       }
