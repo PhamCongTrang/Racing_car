@@ -7,6 +7,7 @@
 #include "LMotorController.h"
 #include "Servo.h"
 #include "SetPID.h"
+
 // Define cac chan dieu khien dong co
 #define SER 6
 #define ENA 5
@@ -39,13 +40,14 @@ void setup()
   myservo.attach(SER);
 }
 // ----------void LOOP-------------------------------------
-
-//-----------------------------------------
 void loop()
 
 {
     if (radio.available()) {
     while (radio.available()) 
+    /* Tráng said : Có thể bỏ vòng while này đi do bản thân void loop đã là một vòng lặp vô hạn
+    void loop kết hợp với if(radio.avaiable()) đã tương đương với while(radio.avaiable())
+    */
     {
       radio.read(&msg, sizeof(msg));
       if(msg[2] == 1)
