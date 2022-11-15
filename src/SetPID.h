@@ -1,6 +1,6 @@
 unsigned long dt, tpre;
 //-----SET he so PID o day-----------------
-int Kp = 1;
+int Kp = 0.025;
 int Ki = 0;
 int Kd = 0;
 int Kv = 0; 

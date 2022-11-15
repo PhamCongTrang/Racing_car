@@ -74,7 +74,7 @@ void loop()
       {
         uint16_t position = qtr.readLineBlack(sensorValues);
         errpre = errnow;
-        errnow = 2500 - position; //Thay errnow = Hàm của Hoàng : vị trí tương đối của line so với điểm chính giữa
+        errnow = position; //Thay errnow = Hàm của Hoàng : vị trí tương đối của line so với điểm chính giữa
         dt = millis() - tpre;
         tpre = millis();
         P = Kp*errnow;
