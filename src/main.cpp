@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "SPI.h"
 #include "RF24.h"
-#include <QTRSensors.h>
+#include "QTRSensors.h"
 
 #include "joystick.h"
 
@@ -59,6 +59,7 @@ void setup()
 void loop()
 
 {
+  /*
   if (radio.available())
   {
     while (radio.available())
@@ -84,6 +85,21 @@ void loop()
         myservo.write(P + I + D);
       }
     }
+  }*/
+  uint16_t position = qtr.readLineBlack(sensorValues);
+  errpre = errnow;
+  errnow = 2500 - position; // Thay errnow = Hàm của Hoàng : vị trí tương đối của line so với điểm chính giữa
+  dt = millis() - tpre;
+  tpre = millis();
+  P = Kp * errnow;
+  I += Ki * errnow * dt;
+  D = Kd * (errnow - errpre) / dt;
+  motorController.move(255 * (1 - Kv * abs(D)));
+  myservo.write(P + I + D);
+    for (uint8_t i = 0; i < SensorCount; i++)
+  {
+    Serial.print(sensorValues[i]);
+    Serial.print('\t');
   }
-  
+  Serial.println(position);
 }
