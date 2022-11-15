@@ -6,7 +6,7 @@
 
 #include "LMotorController.h"
 #include "Servo.h"
-
+#include "SetPID.h"
 // Define cac chan dieu khien dong co
 #define SER 6
 #define ENA 5
@@ -39,11 +39,7 @@ void setup()
   myservo.attach(SER);
 }
 // ----------void LOOP-------------------------------------
-//------khai bao bien cho PID do line------
-int dt, tpre;
-int Kp, Ki, Kd, Kv; // Kv la he so giam toc khi vao goc cua
-int errnow, errpre;
-int P, I = 0, D;
+
 //-----------------------------------------
 void loop()
 
@@ -67,7 +63,7 @@ void loop()
         P = Kp*errnow;
         I += Ki*errnow*dt;
         D = Kd*(errnow-errpre)/dt;
-        motorController.move(255*Kv*D);
+        motorController.move(255*(1-Kv*abs(D)));
         myservo.write(P + I + D);
       }
     }
