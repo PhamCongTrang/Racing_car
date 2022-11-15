@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "SPI.h"
 #include "RF24.h"
+#include <QTRSensors.h>
 
 #include "joystick.h"
 
@@ -22,6 +23,11 @@ const uint64_t pipe = 0x80E8ABC123LL; // địa chỉ phát
 RF24 radio(9, 10);                    // thay 10 thành 53 với mega
 int msg[3];
 
+// set up of line follow
+QTRSensors qtr;
+const uint8_t SensorCount = 5;
+uint16_t sensorValues[SensorCount];
+
 //----------void SETUP-------------------------------------
 void setup()
 {
@@ -37,17 +43,30 @@ void setup()
   radio.startListening();
 
   myservo.attach(SER);
+  // configure the sensors
+  qtr.setTypeRC();
+  qtr.setSensorPins((const uint8_t[]){8, 9, 10, 11, 12}, SensorCount);
+  qtr.setEmitterPin(2);
+
+  // Call calibrate() 400 times to make calibration take about 10 seconds.
+  for (uint16_t i = 0; i < 400; i++)
+  {
+    qtr.calibrate();
+  }
 }
 // ----------void LOOP-------------------------------------
 void loop()
 
 {
-    if (radio.available()) {
-    while (radio.available()) {
+  if (radio.available())
+  {
+    while (radio.available())
+    {
       radio.read(&msg, sizeof(msg));
       joystick obj(msg[0], msg[1], 1022, 1022, 0, 0);
       motorController.move(obj.vel);
       myservo.write(obj.phi);
     }
-  } 
+  }
+  uint16_t position = qtr.readLineBlack(sensorValues);
 }
