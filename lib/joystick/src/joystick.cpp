@@ -10,5 +10,5 @@ joystick::joystick(float _x, float _y, float _xmax, float _ymax, float _xmin, fl
     this->xmin = _xmin;
     this->ymin = _ymin;
     this->vel =  static_cast<int>(255*2/(_xmax+_xmin)*x);
-    this->phi =  static_cast<int>(90 + 120/(_ymax-_ymin)*y);
+    this->phi =  static_cast<int>(90 + 80/(_ymax-_ymin)*y);
 }

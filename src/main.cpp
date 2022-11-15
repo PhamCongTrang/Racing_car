@@ -7,6 +7,7 @@
 
 #include "LMotorController.h"
 #include "Servo.h"
+#include "SetPID.h"
 
 // Define cac chan dieu khien dong co
 #define SER 6
@@ -63,10 +64,26 @@ void loop()
     while (radio.available())
     {
       radio.read(&msg, sizeof(msg));
-      joystick obj(msg[0], msg[1], 1022, 1022, 0, 0);
-      motorController.move(obj.vel);
-      myservo.write(obj.phi);
+      if(msg[2] == 1)
+      {
+        joystick obj(msg[0], msg[1], 1022, 1022, 0, 0);
+        motorController.move(obj.vel);
+        myservo.write(obj.phi);
+      }
+      else
+      {
+        uint16_t position = qtr.readLineBlack(sensorValues);
+        errpre = errnow;
+        errnow = 2500 - position; //Thay errnow = Hàm của Hoàng : vị trí tương đối của line so với điểm chính giữa
+        dt = millis() - tpre;
+        tpre = millis();
+        P = Kp*errnow;
+        I += Ki*errnow*dt;
+        D = Kd*(errnow-errpre)/dt;
+        motorController.move(255*(1-Kv*abs(D)));
+        myservo.write(P + I + D);
+      }
     }
   }
-  uint16_t position = qtr.readLineBlack(sensorValues);
+  
 }
