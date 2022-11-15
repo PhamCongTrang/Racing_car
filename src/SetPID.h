@@ -1,6 +1,5 @@
-//------khai bao bien cho PID do line------
 unsigned long dt, tpre;
-//-----SET he so PID o day-----
+//-----SET he so PID o day-----------------
 int Kp = 1;
 int Ki = 0;
 int Kd = 0;
