@@ -20,10 +20,11 @@ LMotorController motorController(ENA, IN1, IN2);
 Servo myservo;
 
 // setup for RF 2Ghz
+/*
 const uint64_t pipe = 0x80E8ABC123LL; // địa chỉ phát
 RF24 radio(9, 10);                    // thay 10 thành 53 với mega
 int msg[3];
-
+*/
 // set up of line follow
 QTRSensors qtr;
 const uint8_t SensorCount = 5;
@@ -33,7 +34,7 @@ uint16_t sensorValues[SensorCount];
 void setup()
 {
   // put your setup code here, to run once:
-
+/*
   // VoidSetup of rf 2.4ghz
   Serial.begin(9600);
   radio.begin();
@@ -42,7 +43,7 @@ void setup()
   radio.setChannel(10);          // Đặt kênh
   radio.openReadingPipe(1, pipe);
   radio.startListening();
-
+*/
   myservo.attach(SER);
   // configure the sensors
   qtr.setTypeRC();
