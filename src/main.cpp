@@ -12,9 +12,14 @@
 // Define cac chan dieu khien dong co
 #define SER 6
 #define ENA 5
-#define IN1 4
-#define IN2 3
+#define IN1 8
+#define IN2 7
 
+// Define line
+#define LN1 1
+#define LN2 2
+#define LN3 3
+#define LN4 4
 
 
 // setup MOTOR
@@ -45,7 +50,12 @@ void setup()
   radio.startListening();
 */
   myservo.attach(SER);
-  // configure the sensors
+  // set up sensor
+  pinMode(LN1, INPUT);
+  pinMode(LN2, INPUT);
+  pinMode(LN3, INPUT);
+  pinMode(LN4, INPUT);
+
 }
 // ----------void LOOP-------------------------------------
 void loop()
@@ -95,14 +105,12 @@ void loop()
     Serial.print('\t');
   }
   */
-  Serial.print(digitalRead(8));
-  Serial.print("  ");
-  Serial.print(digitalRead(9));
-  Serial.print("  ");
-  Serial.print(digitalRead(10));
-  Serial.print("  ");
-  Serial.print(digitalRead(11));
-  Serial.print("  ");
-  Serial.print(digitalRead(12));
-  Serial.println();
+  int line1 = digitalRead(LN1);
+  int line2 = digitalRead(LN2);
+  int line3 = digitalRead(LN3);
+  int line4 = digitalRead(LN4);
+  
+  
+
+
 }
