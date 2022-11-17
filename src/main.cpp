@@ -15,6 +15,8 @@
 #define IN1 4
 #define IN2 3
 
+
+
 // setup MOTOR
 LMotorController motorController(ENA, IN1, IN2);
 Servo myservo;
@@ -26,9 +28,7 @@ RF24 radio(9, 10);                    // thay 10 thành 53 với mega
 int msg[3];
 */
 // set up of line follow
-QTRSensors qtr;
-const uint8_t SensorCount = 5;
-uint16_t sensorValues[SensorCount];
+
 
 //----------void SETUP-------------------------------------
 void setup()
@@ -46,15 +46,6 @@ void setup()
 */
   myservo.attach(SER);
   // configure the sensors
-  qtr.setTypeRC();
-  qtr.setSensorPins((const uint8_t[]){8, 9, 10, 11, 12}, SensorCount);
-  qtr.setEmitterPin(2);
-
-  // Call calibrate() 400 times to make calibration take about 10 seconds.
-  for (uint16_t i = 0; i < 400; i++)
-  {
-    qtr.calibrate();
-  }
 }
 // ----------void LOOP-------------------------------------
 void loop()
@@ -87,6 +78,7 @@ void loop()
       }
     }
   }*/
+  /*
   uint16_t position = qtr.readLineBlack(sensorValues);
   errpre = errnow;
   errnow = position - 2500; // Thay errnow = Hàm của Hoàng : vị trí tương đối của line so với điểm chính giữa
@@ -102,7 +94,15 @@ void loop()
     Serial.print(sensorValues[i]);
     Serial.print('\t');
   }
-  Serial.print(position); Serial.print('\t');
-  Serial.print(errnow); Serial.print('\t');
-  Serial.println(P+90);
+  */
+  Serial.print(digitalRead(8));
+  Serial.print("  ");
+  Serial.print(digitalRead(9));
+  Serial.print("  ");
+  Serial.print(digitalRead(10));
+  Serial.print("  ");
+  Serial.print(digitalRead(11));
+  Serial.print("  ");
+  Serial.print(digitalRead(12));
+  Serial.println();
 }
