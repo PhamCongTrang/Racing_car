@@ -89,6 +89,7 @@ void loop()
     }
   }*/
   /*
+  //Code PID analog
   uint16_t position = qtr.readLineBlack(sensorValues);
   errpre = errnow;
   errnow = position - 2500; // Thay errnow = Hàm của Hoàng : vị trí tương đối của line so với điểm chính giữa
@@ -105,6 +106,7 @@ void loop()
     Serial.print('\t');
   }
   */
+  // Code digital switch case
   int line1 = digitalRead(LN1);
   int line2 = digitalRead(LN2);
   int line3 = digitalRead(LN3);
