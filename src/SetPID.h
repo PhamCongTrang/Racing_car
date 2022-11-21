@@ -11,3 +11,5 @@ Kv càng lớn, xe càng giảm tốc độ, tỉ lệ với tan góc cua
 */
 int errnow, errpre;
 int P, I = 0, D;
+// Khai bao bien goc quay do line
+int goc;
