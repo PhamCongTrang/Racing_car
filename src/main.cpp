@@ -4,6 +4,7 @@
 #include "QTRSensors.h"
 
 #include "joystick.h"
+#include "sensor.h"
 
 #include "LMotorController.h"
 #include "Servo.h"
@@ -111,8 +112,9 @@ void loop()
   int line2 = digitalRead(LN2);
   int line3 = digitalRead(LN3);
   int line4 = digitalRead(LN4);
-  
-  
-
+  sensor ob(line1, line2, line3, line4);
+  myservo.write(ob.phi);
+  Serial.println(ob.phi);
+  motorController.move(-100);
 
 }
