@@ -11,27 +11,26 @@
 #include "Servo.h"
 #include "SetPID.h"
 
-
-
 // Define cac chan dieu khien dong co
 #define SER 6
 #define ENA 5
 #define IN3 7
 #define IN4 8
 
-
-
 // setup MOTOR
 LMotorController motorController(ENA, IN3, IN4);
 Servo myservo;
-
-
 
 // setup for RF 2Ghz
 const uint64_t pipe = 0x80E8ABC123LL; // địa chỉ phát
 RF24 radio(9, 10);                    // thay 10 thành 53 với mega
 int msg[3];
 
+// Define sensor
+QTRSensors qtr;
+const uint8_t SensorCount = 8;
+uint16_t sensorValues[SensorCount];
+int valueLine[8];
 
 
 //----------void SETUP-------------------------------------
@@ -47,9 +46,12 @@ void setup()
   radio.startListening();
 
   myservo.attach(SER);
+
+  // configure the sensors
+  qtr.setTypeRC();
+  qtr.setSensorPins((const uint8_t[]){A5, A4, A3, A2, A1, A0, 3, 4}, SensorCount);
+  qtr.setEmitterPin(2);
 }
-
-
 
 // ----------void LOOP-------------------------------------
 void loop()
@@ -74,7 +76,72 @@ void loop()
       }
       else
       {
+        int position;
+        // read raw sensor values
+        qtr.read(sensorValues);
+        for (uint8_t i = 0; i < SensorCount; i++)
+        {
+          if (sensorValues[i] > 2000)
+          {
+            valueLine[i] = 0;
+          }
+          else
+          {
+            valueLine[i] = 1;
+          }
+        }
+        position = valueLine[0] + valueLine[1]*2 + valueLine[2]*4 + valueLine[3]*8 + valueLine[4]*16 + valueLine[5]*32 + valueLine[6]*64 + valueLine[7]*128;
+        switch (position)
+        {
+          case 0b00000001: error = 16;   break;
+          case 0b00000010: error = 12;   break;
+          case 0b00000100: error = 8;   break;
+          case 0b00001000: error = 4;   break;
+          case 0b00010000: error = -4;   break;
+          case 0b00100000: error = -8;   break;
+          case 0b01000000: error = -12;   break;
+          case 0b10000000: error = -16;   break;
 
+          case 0b00000011: error = 14;   break;
+          case 0b00000110: error = 10;   break;
+          case 0b00001100: error = 6;   break;
+          case 0b00011000: error = 0;   break;
+          case 0b00110000: error = -6;   break;
+          case 0b01100000: error = -10;   break;
+          case 0b11000000: error = -14;   break;
+
+          case 0b00000111: error = 12;   break;
+          case 0b00001110: error = 8;   break;
+          case 0b00011100: error = 4;   break;
+          case 0b00111000: error = -4;   break;
+          case 0b01110000: error = -8;   break;
+          case 0b11100000: error = -12;   break;
+          
+          case 0b00001111: error = 10;   break;
+          case 0b00011110: error = 6;   break;
+          case 0b00111100: error = 0;   break;
+          case 0b01111000: error = -6;   break;
+          case 0b11110000: error = -10;   break;
+
+          case 0b00011111: error = 8;   break;
+          case 0b00111110: error = 4;   break;
+          case 0b01111100: error = -4;   break;
+          case 0b11111000: error = -8;   break;
+
+          case 0b00111111: error = 6;   break;
+          case 0b01111110: error = 0;   break;
+          case 0b11111100: error = -6;   break;
+
+          case 0b01111111: error = 4;   break;
+          case 0b11111110: error = -4;   break;   
+                  
+          default: break;
+          motorController.move(85 + error*6);
+
+          myservo.write(90 + error*2.5);
+
+        }
+        
       }
     }
   }
