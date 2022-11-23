@@ -17,7 +17,7 @@
 #define IN4 8
 
 // Define line
-#define LN1 1
+//#define LN1 1
 #define LN2 2
 #define LN3 3
 #define LN4 4
@@ -35,7 +35,6 @@ int msg[3];
 //----------void SETUP-------------------------------------
 void setup()
 {
-  // put your setup code here, to run once:
   // VoidSetup of rf 2.4ghz
   Serial.begin(9600);
   radio.begin();
@@ -47,11 +46,10 @@ void setup()
 
   myservo.attach(SER);
   // set up sensor
-  pinMode(LN1, INPUT);
+  //pinMode(LN1, INPUT);
   pinMode(LN2, INPUT);
   pinMode(LN3, INPUT);
   pinMode(LN4, INPUT);
-
 }
 // ----------void LOOP-------------------------------------
 void loop()
@@ -65,31 +63,50 @@ void loop()
       if(msg[2] == 1)
       {
         joystick obj(msg[0], msg[1], 1022, 1022, 0, 0);
-        motorController.move(obj.vel);
+
+        if (obj.vel > 10) v = 0.7*obj.vel + 72.86;
+        else if (obj.vel < -10) v = 0.7*obj.vel - 72.86;
+        else v = 0;
+        motorController.move(v);
         myservo.write(obj.phi);
       }
       else
       {
-        int line1 = digitalRead(LN1);
+        //int line1 = digitalRead(LN1);
         int line2 = digitalRead(LN2);
         int line3 = digitalRead(LN3);
         int line4 = digitalRead(LN4);
+                          
         int error;
-        error = line1*1 + line2*2 + line3*4 + line4*8;
+        error = line2*1 + line3*2 + line4*4;
         switch (error)
         {
-          case 0b0001: goc = 3;     break;
-          case 0b0010: goc = 1.5;   break;
-          case 0b0110: goc = 0;     break;
-          case 0b0100: goc = -1;    break;
-          case 0b1000: goc = -2;    break;
-          case 0b1111: goc = -2.5;  break;
-          case 0b1001: goc = -2.5;  break;
+          case 0b110: goc = 3;     break;
+          case 0b100: goc = 1.5;     break;          
+          case 0b101: goc = 0;     break;
+          case 0b001: goc = -1.5;     break;
+          case 0b011: goc = -3;     break;
         default :                   break;
         }
         myservo.write(90 - 15*goc);
-        Serial.println(goc);
-        motorController.move(120);
+        motorController.move(80 + 35*abs(goc) );
+                            
+        /*                           int error;
+        error = line2*1 + line3*2 + line4*4;
+        static int lastErr;
+        switch (error)
+        {
+          case 0b110: goc = 3;     break;
+          case 0b100: goc = 1.5;     break;          
+          case 0b101: goc = 0;     break;
+          case 0b001: goc = -1.5;     break;
+          case 0b011: goc = -3;     break;
+        default :     goc = lastErr;              break;
+        }
+        lastErr = goc;
+        myservo.write(90 - 15*goc);
+        motorController.move(80 + 35*abs(goc) );
+        */                    
       }
     }
   }  
