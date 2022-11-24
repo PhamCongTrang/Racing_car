@@ -14,3 +14,5 @@ int P, I = 0, D;
 // Khai bao bien goc quay do line
 int goc;
 int v;
+int error;
+int position;
