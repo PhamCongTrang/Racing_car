@@ -221,8 +221,6 @@ if(mode==1)
 }
 else
 {
-  dem = 0;
-  sum = 0;
   //  CODE PID ANALOG
   qtr.read(sensorValues);
   for (uint8_t i = 0; i < SensorCount; i++)
@@ -230,8 +228,7 @@ else
     if (sensorValues[i] > 2000)
     {
       valueLine[i] = 1;
-    }
-    else
+    } else
     {
       valueLine[i] = 0;
     }
@@ -247,20 +244,27 @@ else
     errnow = errpre/abs(errpre)*40/Kp;
   }
   Serial.print(" Errornow: "); Serial.print(errnow); 
-  dt = millis() - tpre;
-  Serial.print(" dt: ");
-  Serial.print(dt); Serial.print(" D: ");
-  tpre = millis();
+  if(errnow == 0)
+  {
+    motorController.move(-100);
+    myservo.write(90 - 40*errpre/abs(errpre));
+  } else
+  {
+    dt = millis() - tpre;
+    tpre = millis();
+    Serial.print(" dt: "); Serial.print(dt);
 
-  P = Kp * errnow;
-  I += Ki * errnow * dt;
-  D = Kd * (errnow - errpre) / dt;
+    P = Kp * errnow;
+    I += Ki * errnow * dt;
+    D = Kd * (errnow - errpre) / dt;
 
-  Serial.print(D); Serial.print("goc: ");
-  errpre = errnow;
+    Serial.print(" D: "); Serial.print(D);
+    errpre = errnow;
 
-  Serial.println(P + I + D + 90);
-  motorController.move(255 * (0.5 - Kv * abs(D)));
-  myservo.write((P + I + D) + 90);
+    Serial.print("goc: "); Serial.println(P + I + D + 90);
+    motorController.move(80 + abs(P + I + D));
+    myservo.write((P + I + D) + 90);
+  }
+  
 } 
 }

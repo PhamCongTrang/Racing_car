@@ -1,9 +1,10 @@
-unsigned long dt, tpre;
+unsigned long dt, tpre = 0;
 //-----SET he so PID o day-----------------
-float Kp = 10;
+float Kp = 9;
 float Ki = 0;
-float Kd = 0.12; // dt=80
+float Kd = 0.05; // dt=80
 float Kv = 0; 
+//motorController.move(255 * (0.6 - Kv * abs(D)));
 /* 
 Kv là hệ số giảm tốc khi vào cua
 Kv = 0 thì xe giữ nguyên tốc độ khi vào cua
