@@ -1,8 +1,8 @@
 unsigned long dt, tpre;
 //-----SET he so PID o day-----------------
-float Kp = 5;
+float Kp = 10;
 float Ki = 0;
-float Kd = 0;
+float Kd = 0.12; // dt=80
 float Kv = 0; 
 /* 
 Kv là hệ số giảm tốc khi vào cua
