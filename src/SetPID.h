@@ -16,6 +16,11 @@ int goc;
 int v;
 int error;
 int position;
-int mode=0;
+int mode=1;
 float sum;
 int dem;
+
+
+int demQuay = 0;
+int demLan = 0;
+
