@@ -244,33 +244,36 @@ else
   qtr.read(sensorValues);
   for (uint8_t i = 0; i < SensorCount; i++)
   {
-    if (sensorValues[i] < 2000)
+    if (sensorValues[i] > 2000)
     {
       valueLine[i] = 1;
-      dem++;
-      sum += i - 3.5;
     }
     else
     {
       valueLine[i] = 0;
     }
+    Serial.print(valueLine[i]); 
   }
-  if(dem!=0)
+  sum = valueLine[0]*(-4) + valueLine[1]*(-3) + valueLine[2]*(-2) + valueLine[3]*(-1) + valueLine[4]*1 + valueLine[5]*2 + valueLine[6]*3 + valueLine[7]*4;
+  dem = valueLine[0] + valueLine[1] + valueLine[2] + valueLine[3] + valueLine[4] + valueLine[5] + valueLine[6] + valueLine[7];
+  if(dem != 0)
   {
     errnow = sum/dem;
   } else 
   {
-    errnow = 40/Kp*errnow/abs(errnow);
+    errnow = errpre/abs(errpre)*40/Kp;
   }
-  //errnow = valueLine[0]*(-4) + valueLine[1]*(-3) + valueLine[2]*(-2) + valueLine[3]*(-1) + valueLine[4]*1 + valueLine[5]*2 + valueLine[6]*3 + valueLine[7]*4;
-  Serial.print(errnow); Serial.print("  ");
+  Serial.print(" Errornow: "); Serial.print(errnow); 
   dt = millis() - tpre;
+  Serial.print(" dt: ");
+  Serial.print(dt); Serial.print(" D: ");
   tpre = millis();
 
   P = Kp * errnow;
   I += Ki * errnow * dt;
   D = Kd * (errnow - errpre) / dt;
 
+  Serial.print(D); Serial.print("goc: ");
   errpre = errnow;
 
   Serial.println(P + I + D + 90);
