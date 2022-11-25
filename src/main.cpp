@@ -153,11 +153,11 @@ if(mode==1)
   {
     if (sensorValues[i] > 2000)
     {
-      valueLine[i] = 1;
+      valueLine[i] = 0;
     }
     else
     {
-      valueLine[i] = 0;
+      valueLine[i] = 1;
     }
   }
   position = valueLine[0] + valueLine[1]*2 + valueLine[2]*4 + valueLine[3]*8 + valueLine[4]*16 + valueLine[5]*32 + valueLine[6]*64 + valueLine[7]*128;
@@ -167,57 +167,74 @@ if(mode==1)
   switch (position)
   {
     case 0b00000001: error = 16 ;   break;
-    case 0b00000010: error = 12 ;   break;
-    case 0b00000100: error = 8;   break;
-    case 0b00001000: error = 4;   break;
-    case 0b00010000: error = -4;   break;
-    case 0b00100000: error = -8;   break;
-    case 0b01000000: error = -12;   break;
+    case 0b00000010: error = 12+4;   break;
+    case 0b00000100: error = 8+3;   break;
+    case 0b00001000: error = 4+3;   break;
+    case 0b00010000: error = -4-3;   break;
+    case 0b00100000: error = -8-3;   break;
+    case 0b01000000: error = -12-4;   break;
     case 0b10000000: error = -16;   break;
 
-    case 0b00000011: error = 14 ;   break;
-    case 0b00000110: error = 10;   break;
-    case 0b00001100: error = 6;   break;
+    case 0b00000011: error = 14 + 2 ;   break;
+    case 0b00000110: error = 10 + 4;   break;
+    case 0b00001100: error = 6 + 3;   break;
     case 0b00011000: error = 0;   break;
-    case 0b00110000: error = -6;   break;
-    case 0b01100000: error = -10;   break;
-    case 0b11000000: error = -14;   break;
+    case 0b00110000: error = -6 - 3;   break;
+    case 0b01100000: error = -10 - 4;   break;
+    case 0b11000000: error = -14 - 2;   break;
 
-    case 0b00000111: error = 12 ;   break;
-    case 0b00001110: error = 8;   break;
-    case 0b00011100: error = 4;   break;
-    case 0b00111000: error = -4;   break;
-    case 0b01110000: error = -8;   break;
-    case 0b11100000: error = -12;   break;
+    case 0b00000111: error = 12 + 4;   break;
+    case 0b00001110: error = 8 + 3;   break;
+    case 0b00011100: error = 4+2;   break;
+    case 0b00111000: error = -4+2;   break;
+    case 0b01110000: error = -8 - 3;   break;
+    case 0b11100000: error = -12 - 4;   break;
     
-    case 0b00001111: error = 10 ;   break;
-    case 0b00011110: error = 6;   break;
+    case 0b00001111: error = 10 +5;   break;
+    case 0b00011110: error = 6 +4;   break;
     case 0b00111100: error = 0;   break;
-    case 0b01111000: error = -6;   break;
-    case 0b11110000: error = -10;   break;
+    case 0b01111000: error = -6-4;   break;
+    case 0b11110000: error = -10-5;   break;
 
-    case 0b00011111: error = 8;   break;
-    case 0b00111110: error = 4;   break;
-    case 0b01111100: error = -4;   break;
-    case 0b11111000: error = -8;   break;
+    case 0b00011111: error = 8+5;   break;
+    case 0b00111110: error = 4+3;   break;
+    case 0b01111100: error = -4-3;   break;
+    case 0b11111000: error = -8-5;   break;
 
-    case 0b00111111: error = 6;   break;
+    case 0b00111111: error = 6+6;   break;
     case 0b01111110: error = 0;   break;
-    case 0b11111100: error = -6;   break;
+    case 0b11111100: error = -6-6;   break;
 
-    case 0b01111111: error = 4;   break;
-    case 0b11111110: error = -4;   break;   
+    case 0b01111111: error = 4+4;   break;
+    case 0b11111110: error = -4-4;   break;   
 
     case 0b11111111: if(error>0) {error = 16;} 
                       else {error = -16;} break;     
     default: break;
   }
-  motorController.move(80 + abs(error*error)*0.4);
+  motorController.move(130 + abs(error*error)*0.37);
   if(error>0) { goc = error*1.25; }
   else goc = error*1.1;
 
-  myservo.write(90 - goc*2.5);
-  Serial.println(90 - error*2.5);  
+  myservo.write(90 - goc*2.25);
+  Serial.println(90 - error*2.5);
+  demQuay = demQuay + 1;
+  if (demQuay == 50){
+    demQuay = 0;
+  }
+  if  (error >= 10){
+    demLan = demLan + 1;
+  } else{
+    demLan = 0;
+    demQuay = 0;
+  }
+  if (demLan == 50){
+    for(int i = 0; i< 400; i++){
+    motorController.move(-90 - abs(error*error)*0.37);
+    myservo.write(-90 + goc*2.25);
+    }
+  }
+
 }
 else
 {
