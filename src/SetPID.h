@@ -1,8 +1,8 @@
 unsigned long dt, tpre = 0;
 //-----SET he so PID o day-----------------
-float Kp = 9;
+float Kp = 9; //Kp < 10 se khong ket
 float Ki = 0;
-float Kd = 0.05; // dt=80
+float Kd = 0;//.05 // dt=40
 float Kv = 0; 
 //motorController.move(255 * (0.6 - Kv * abs(D)));
 /* 
@@ -17,10 +17,10 @@ int goc;
 int v;
 int error;
 int position;
-int mode=1;
+int mode=1; // Digital or Analog
 float sum;
 int dem;
-
+int FULL=1; // Full or Line follower
 
 int demQuay = 0;
 int demLan = 0;

@@ -11,10 +11,10 @@
 #include "SetPID.h"
 
 // Define cac chan dieu khien dong co
-#define SER 6
-#define ENA 5
-#define IN3 7
-#define IN4 8
+#define SER 5 // Dao cho cho ENA
+#define ENA 6
+#define IN3 8
+#define IN4 7
 
 // setup MOTOR
 LMotorController motorController(ENA, IN3, IN4);
@@ -30,7 +30,6 @@ QTRSensors qtr;
 const uint8_t SensorCount = 8;
 uint16_t sensorValues[SensorCount];
 int valueLine[8];
-
 
 //----------void SETUP-------------------------------------
 void setup()
@@ -48,240 +47,141 @@ void setup()
 
   // configure the sensors
   qtr.setTypeRC();
-  qtr.setSensorPins((const uint8_t[]){4, 3, A0, A1, A2, A3, A4, A5}, SensorCount);
+  qtr.setSensorPins((const uint8_t[]){A0, A1, A2, A3, A4, A5, 3,4}, SensorCount);
   qtr.setEmitterPin(2);
 }
 
 // ----------void LOOP-------------------------------------
 void loop()
-{
-  /* FULL
+{ // void
   if (radio.available())
-  {
-    while (radio.available()) // bỏ đi
-    {
-      radio.read(&msg, sizeof(msg));
-      if (msg[2] == 1)
-      {
-        joystick obj(msg[0], msg[1], 1022, 1022, 0, 0);
+  { // Check avaiable
+    radio.read(&msg, sizeof(msg));
+    if (msg[2] == 1) 
+    { // Control
+      joystick obj(msg[0], msg[1], 1022, 1022, 0, 0);
 
-        if (obj.vel > 10)
-          v = 0.7 * obj.vel + 72.86;
-        else if (obj.vel < -10)
-          v = 0.7 * obj.vel - 72.86;
-        else
-          v = 0;
-        motorController.move(v);
-        myservo.write(obj.phi);
-      }
+      if (obj.vel > 10)
+        v = 0.7 * obj.vel + 72.86;
+      else if (obj.vel < -10)
+        v = 0.7 * obj.vel - 72.86;
       else
+        v = 0;
+      motorController.move(v);
+      myservo.write(obj.phi);
+    } // End Control
+    else // Line Following
+    if(mode == 1) // DIGITAL
+    {
+      qtr.read(sensorValues);
+      for (uint8_t i = 0; i < SensorCount; i++)
       {
-        // read raw sensor values
-        qtr.read(sensorValues);
-        for (uint8_t i = 0; i < SensorCount; i++)
-        {
-          if (sensorValues[i] > 2000)
-          {
-            valueLine[i] = 0;
-          }
-          else
-          {
-            valueLine[i] = 1;
-          }
-          Serial.print(position, BIN);
-        }
-        position = valueLine[0] + valueLine[1]*2 + valueLine[2]*4 + valueLine[3]*8 + valueLine[4]*16 + valueLine[5]*32 + valueLine[6]*64 + valueLine[7]*128;
-        Serial.println(position , DEC);
-        //position = ~ position;
-        switch (position)
-        {
-          case 0b00000001: error = 16 + 2;   break;
-          case 0b00000010: error = 12 + 2;   break;
-          case 0b00000100: error = 8;   break;
-          case 0b00001000: error = 4;   break;
-          case 0b00010000: error = -4;   break;
-          case 0b00100000: error = -8;   break;
-          case 0b01000000: error = -12;   break;
-          case 0b10000000: error = -16;   break;
-
-          case 0b00000011: error = 14 + 2;   break;
-          case 0b00000110: error = 10;   break;
-          case 0b00001100: error = 6;   break;
-          case 0b00011000: error = 0;   break;
-          case 0b00110000: error = -6;   break;
-          case 0b01100000: error = -10;   break;
-          case 0b11000000: error = -14;   break;
-
-          case 0b00000111: error = 12 + 2;   break;
-          case 0b00001110: error = 8 + 2;   break;
-          case 0b00011100: error = 4;   break;
-          case 0b00111000: error = -4;   break;
-          case 0b01110000: error = -8;   break;
-          case 0b11100000: error = -12;   break;
-          
-          case 0b00001111: error = 10 + 2;   break;
-          case 0b00011110: error = 6;   break;
-          case 0b00111100: error = 0;   break;
-          case 0b01111000: error = -6;   break;
-          case 0b11110000: error = -10;   break;
-
-          case 0b00011111: error = 8;   break;
-          case 0b00111110: error = 4;   break;
-          case 0b01111100: error = -4;   break;
-          case 0b11111000: error = -8;   break;
-
-          case 0b00111111: error = 6;   break;
-          case 0b01111110: error = 0;   break;
-          case 0b11111100: error = -6;   break;
-
-          case 0b01111111: error = 4;   break;
-          case 0b11111110: error = -4;   break;   
-                  
-          default: break;
-        }
-        motorController.move(80 + abs(error)*4);
-        myservo.write(90 - error*2.5);
+        if (sensorValues[i] > 2000)  valueLine[i] = 0;
+        else  valueLine[i] = 1;
+        Serial.print(valueLine[i]);
       }
+        
+      position = valueLine[0] + valueLine[1] * 2 + valueLine[2] * 4 + valueLine[3] * 8 + valueLine[4] * 16 + valueLine[5] * 32 + valueLine[6] * 64 + valueLine[7] * 128;
+      //Serial.print(position);
+      switch (position)
+      {
+        case 0b00000000:  error = error / abs(error);  break;
+        case 0b00000001:  error = 16;  break;
+        case 0b00000010:  error = 12 + 4;  break;
+        case 0b00000100:  error = 8 + 3;  break;
+        case 0b00001000:  error = 4 + 3;  break;
+        case 0b00010000:  error = -4 - 3;  break;
+        case 0b00100000:  error = -8 - 3;  break;
+        case 0b01000000:  error = -12 - 4;  break;
+        case 0b10000000:  error = -16;  break;
+
+        case 0b00000011:  error = 14 + 2;  break;
+        case 0b00000110:  error = 10 + 4;  break;
+        case 0b00001100:  error = 6 + 3;  break;
+        case 0b00011000:  error = 0;  break;
+        case 0b00110000:  error = -6 - 3;  break;
+        case 0b01100000:  error = -10 - 4;  break;
+        case 0b11000000:  error = -14 - 2;  break;
+
+        case 0b00000111:  error = 12 + 4;  break;
+        case 0b00001110:  error = 8 + 3;  break;
+        case 0b00011100:  error = 4 + 2;  break;
+        case 0b00111000:  error = -4 + 2;  break;
+        case 0b01110000:  error = -8 - 3;  break;
+        case 0b11100000:  error = -12 - 4;  break;
+
+        case 0b00001111:  error = 10 + 5;  break;
+        case 0b00011110:  error = 6 + 4;  break;
+        case 0b00111100:  error = 0;  break;
+        case 0b01111000:  error = -6 - 4;  break;
+        case 0b11110000:  error = -10 - 5;  break;
+
+        case 0b00011111:  error = 8 + 5;  break;
+        case 0b00111110:  error = 4 + 3;  break;
+        case 0b01111100:  error = -4 - 3;  break;
+        case 0b11111000:  error = -8 - 5;  break;
+
+        case 0b00111111:  error = 6 + 6;  break;
+        case 0b01111110:  error = 0;  break;
+        case 0b11111100:  error = -6 - 6;  break;
+
+        case 0b01111111:  error = 4 + 4;  break;
+        case 0b11111110:  error = -4 - 4;  break;
+
+        case 0b11111111:  {if (error > 0)  error = 16;
+                          else  error = -16; } break;
+        
+        default:  break;
+      } //end switch case
+      Serial.println(error);
+      if (abs(error) == 1) // Check co lui
+      { // Chay lui
+        motorController.move(-130);
+        myservo.write(90 + 30 * error); // dau servo
+        delay(600);                     // Tha troi xe 0,1s
+        motorController.move(30); // phanh
+      } // End chay lui
+      else 
+      { // Chay tien
+        motorController.move(100 + abs(error * error) * 0.32);
+        if (error > 0)  goc = error * 1.25;
+        else  goc = error * 1.1;
+        myservo.write(90 - goc * 2.25);
+      } // End chay tien
     }
-  } */
-  //CHON MODE 1 Digital
-  // CODE PID DIGITAL
-if(mode==1)
-  {
-  qtr.read(sensorValues);
-  for (uint8_t i = 0; i < SensorCount; i++)
-  {
-    if (sensorValues[i] > 2000)
+    else //PID
     {
-      valueLine[i] = 0;
-    }
-    else
-    {
-      valueLine[i] = 1;
-    }
-  }
-  position = valueLine[0] + valueLine[1]*2 + valueLine[2]*4 + valueLine[3]*8 + valueLine[4]*16 + valueLine[5]*32 + valueLine[6]*64 + valueLine[7]*128;
-  
-  Serial.print(position,BIN); Serial.print("  ");
-  
-  switch (position)
-  {
-    case 0b00000001: error = 16 ;   break;
-    case 0b00000010: error = 12+4;   break;
-    case 0b00000100: error = 8+3;   break;
-    case 0b00001000: error = 4+3;   break;
-    case 0b00010000: error = -4-3;   break;
-    case 0b00100000: error = -8-3;   break;
-    case 0b01000000: error = -12-4;   break;
-    case 0b10000000: error = -16;   break;
+      qtr.read(sensorValues);
+      for (uint8_t i = 0; i < SensorCount; i++)
+        if (sensorValues[i] > 2000)  valueLine[i] = 1;
+        else  valueLine[i] = 0;
+      sum = valueLine[0] * (-4) + valueLine[1] * (-3) + valueLine[2] * (-2) + valueLine[3] * (-1) + valueLine[4] * 1 + valueLine[5] * 2 + valueLine[6] * 3 + valueLine[7] * 4;
+      dem = valueLine[0] + valueLine[1] + valueLine[2] + valueLine[3] + valueLine[4] + valueLine[5] + valueLine[6] + valueLine[7];
+      if (dem != 0)  errnow = sum / dem;
+      else  errnow = errpre / abs(errpre) * 40 / Kp;
 
-    case 0b00000011: error = 14 + 2 ;   break;
-    case 0b00000110: error = 10 + 4;   break;
-    case 0b00001100: error = 6 + 3;   break;
-    case 0b00011000: error = 0;   break;
-    case 0b00110000: error = -6 - 3;   break;
-    case 0b01100000: error = -10 - 4;   break;
-    case 0b11000000: error = -14 - 2;   break;
+      if (errnow == 0 && dem == 0)
+      { // Chay lui
+        motorController.move(-120);
+        myservo.write(90 + 30 * errpre / abs(errpre)); // dau servo
+        delay(500);                                    // Tha troi xe 0,1s
+        motorController.move(30);
+      } // End chay lui
+      else
+      { // Chay tien
+        dt = millis() - tpre;
+        tpre = millis();
 
-    case 0b00000111: error = 12 + 4;   break;
-    case 0b00001110: error = 8 + 3;   break;
-    case 0b00011100: error = 4+2;   break;
-    case 0b00111000: error = -4+2;   break;
-    case 0b01110000: error = -8 - 3;   break;
-    case 0b11100000: error = -12 - 4;   break;
-    
-    case 0b00001111: error = 10 +5;   break;
-    case 0b00011110: error = 6 +4;   break;
-    case 0b00111100: error = 0;   break;
-    case 0b01111000: error = -6-4;   break;
-    case 0b11110000: error = -10-5;   break;
+        P = Kp * errnow;
+        I += Ki * errnow * dt;
+        D = Kd * (errnow - errpre) / dt;
 
-    case 0b00011111: error = 8+5;   break;
-    case 0b00111110: error = 4+3;   break;
-    case 0b01111100: error = -4-3;   break;
-    case 0b11111000: error = -8-5;   break;
+        errpre = errnow;
 
-    case 0b00111111: error = 6+6;   break;
-    case 0b01111110: error = 0;   break;
-    case 0b11111100: error = -6-6;   break;
-
-    case 0b01111111: error = 4+4;   break;
-    case 0b11111110: error = -4-4;   break;   
-
-    case 0b11111111: if(error>0) {error = 16;} 
-                      else {error = -16;} break;     
-    default: break;
-  }
-  motorController.move(130 + abs(error*error)*0.37);
-  if(error>0) { goc = error*1.25; }
-  else goc = error*1.1;
-
-  myservo.write(90 - goc*2.25);
-  Serial.println(90 - error*2.5);
-  demQuay = demQuay + 1;
-  if (demQuay == 50){
-    demQuay = 0;
-  }
-  if  (error >= 10){
-    demLan = demLan + 1;
-  } else{
-    demLan = 0;
-    demQuay = 0;
-  }
-  if (demLan == 50){
-    for(int i = 0; i< 400; i++){
-    motorController.move(-90 - abs(error*error)*0.37);
-    myservo.write(-90 + goc*2.25);
-    }
-  }
-
-}
-else
-{
-  //  CODE PID ANALOG
-  qtr.read(sensorValues);
-  for (uint8_t i = 0; i < SensorCount; i++)
-  {
-    if (sensorValues[i] > 2000)
-    {
-      valueLine[i] = 1;
-    } else
-    {
-      valueLine[i] = 0;
-    }
-    Serial.print(valueLine[i]); 
-  }
-  sum = valueLine[0]*(-4) + valueLine[1]*(-3) + valueLine[2]*(-2) + valueLine[3]*(-1) + valueLine[4]*1 + valueLine[5]*2 + valueLine[6]*3 + valueLine[7]*4;
-  dem = valueLine[0] + valueLine[1] + valueLine[2] + valueLine[3] + valueLine[4] + valueLine[5] + valueLine[6] + valueLine[7];
-  if(dem != 0)
-  {
-    errnow = sum/dem;
-  } else 
-  {
-    errnow = errpre/abs(errpre)*40/Kp;
-  }
-  Serial.print(" Errornow: "); Serial.print(errnow); 
-  if(errnow == 0)
-  {
-    motorController.move(-100);
-    myservo.write(90 - 40*errpre/abs(errpre));
-  } else
-  {
-    dt = millis() - tpre;
-    tpre = millis();
-    Serial.print(" dt: "); Serial.print(dt);
-
-    P = Kp * errnow;
-    I += Ki * errnow * dt;
-    D = Kd * (errnow - errpre) / dt;
-
-    Serial.print(" D: "); Serial.print(D);
-    errpre = errnow;
-
-    Serial.print("goc: "); Serial.println(P + I + D + 90);
-    motorController.move(80 + abs(P + I + D));
-    myservo.write((P + I + D) + 90);
-  }
-  
-} 
-}
+        motorController.move(90 + abs(P + I + D));
+        myservo.write(-(P + I + D) + 92); // Dau servo
+      } // End chay tien
+    } // End PID
+  } // End check avaiable
+} // End void
+ 
