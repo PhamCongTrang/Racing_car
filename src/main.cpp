@@ -29,7 +29,7 @@ int msg[3];
 QTRSensors qtr;
 const uint8_t SensorCount = 5;
 uint16_t sensorValues[SensorCount];
-int valueLine[8];
+int valueLine[5];
 
 //----------void SETUP-------------------------------------
 void setup()
