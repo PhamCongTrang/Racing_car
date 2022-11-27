@@ -78,7 +78,6 @@ void loop()
       {
         if (sensorValues[i] > 2000)  valueLine[i] = 0;
         else  valueLine[i] = 1;
-        Serial.print(valueLine[i]);
       }
         
       position = valueLine[0] + valueLine[1] * 2 + valueLine[2] * 4 + valueLine[3] * 8 + valueLine[4] * 16;
@@ -113,17 +112,31 @@ void loop()
       Serial.println(error);
       if (abs(error) == 1) // Check co lui
       { // Chay lui
-        motorController.move(-130);
-        myservo.write(90 + 30 * error); // dau servo
-        delay(600);                     // Tha troi xe 0,1s
-        motorController.move(30); // phanh
+        if ((millis() - lineout) > 1000)
+        {
+          myservo.write(90 + 30 * error); // dau servo
+          motorController.move(-180);
+          delay(500);                     // Tha troi xe 0,1s
+          //motorController.move(100); // phanh
+          Serial.print("lui"); Serial.println(millis() - lineout);
+        }
+        else
+        {
+          if (error > 0)  goc = error * 1.25;
+          else  goc = error * 1.1;
+          myservo.write(90 - 36 * error); // dau servo
+          motorController.move(120); 
+          Serial.println("Warning out ---");
+        }
       } // End chay lui
       else 
       { // Chay tien
-        motorController.move(100 + abs(error * error) * 0.32);
+        lineout = millis();
+        motorController.move(110 + abs(error * error) * 0.4);
         if (error > 0)  goc = error * 1.25;
         else  goc = error * 1.1;
         myservo.write(90 - goc * 2.25);
+        Serial.print("Tien"); Serial.println(lineout);
       } // End chay tien
     }
     else //PID

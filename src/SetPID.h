@@ -25,3 +25,4 @@ int FULL=1; // Full or Line follower
 int demQuay = 0;
 int demLan = 0;
 
+unsigned long lineout = 0;
