@@ -13,8 +13,8 @@
 // Define cac chan dieu khien dong co
 #define SER 5 
 #define ENA 6
-#define IN3 8
-#define IN4 7
+#define IN3 7
+#define IN4 8
 
 // setup MOTOR
 LMotorController motorController(ENA, IN3, IN4);
@@ -57,18 +57,21 @@ void loop()
   if (radio.available())
   { // Check avaiable
     radio.read(&msg, sizeof(msg));
-    if (msg[2] == 1) 
+    Serial.print("OK");
+    if (msg[2] == 1)
     { // Control
       joystick obj(msg[0], msg[1], 1022, 1022, 0, 0);
 
       if (obj.vel > 10)
-        v = 0.7 * obj.vel + 72.86;
+        v = 0.7 * obj.vel + 77.86;
       else if (obj.vel < -10)
         v = 0.7 * obj.vel - 72.86;
       else
         v = 0;
       motorController.move(v);
+      Serial.print(v); Serial.print("  ");
       myservo.write(obj.phi);
+      Serial.print(obj.phi); Serial.println("  ");
     } // End Control
     else // Line Following
     if(mode == 1) // DIGITAL
@@ -78,10 +81,12 @@ void loop()
       {
         if (sensorValues[i] > 2000)  valueLine[i] = 0;
         else  valueLine[i] = 1;
+        Serial.print(valueLine[i]);
       }
-        
+      delay(500); 
       position = valueLine[0] + valueLine[1] * 2 + valueLine[2] * 4 + valueLine[3] * 8 + valueLine[4] * 16;
-      //Serial.print(position);
+      //Serial.println(position);
+      Serial.println();
       switch (position)
       {
         case 0b00000:  error = error / abs(error);  break;
@@ -109,16 +114,16 @@ void loop()
         
         default:  break;
       } //end switch case
-      Serial.println(error);
+      //Serial.println(error);
       if (abs(error) == 1) // Check co lui
       { // Chay lui
-        if ((millis() - lineout) > 1000)
+        if ((millis() - lineout) > 700)
         {
           myservo.write(90 + 30 * error); // dau servo
-          motorController.move(-180);
-          delay(500);                     // Tha troi xe 0,1s
+          motorController.move(-120);
+          delay(200);                     // Tha troi xe 0,1s
           //motorController.move(100); // phanh
-          Serial.print("lui"); Serial.println(millis() - lineout);
+          //Serial.print("lui"); Serial.println(millis() - lineout);
         }
         else
         {
@@ -126,17 +131,17 @@ void loop()
           else  goc = error * 1.1;
           myservo.write(90 - 36 * error); // dau servo
           motorController.move(120); 
-          Serial.println("Warning out ---");
+          //Serial.println("Warning out ---");
         }
       } // End chay lui
       else 
       { // Chay tien
         lineout = millis();
-        motorController.move(110 + abs(error * error) * 0.4);
+        motorController.move(120 + abs(error * error) * 0.55);
         if (error > 0)  goc = error * 1.25;
         else  goc = error * 1.1;
         myservo.write(90 - goc * 2.25);
-        Serial.print("Tien"); Serial.println(lineout);
+        //Serial.print("Tien"); Serial.println(lineout);
       } // End chay tien
     }
     else //PID
